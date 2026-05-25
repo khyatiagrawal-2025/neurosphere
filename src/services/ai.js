@@ -1,46 +1,77 @@
-export async function askNeuroSphere(message) {
+const API_KEY =
+  import.meta.env.VITE_OPENROUTER_API_KEY
+
+export async function askNeuroSphere(
+  userMessage,
+  previousMessages = []
+) {
 
   try {
+
+    const formattedMessages =
+      previousMessages.map((msg) => ({
+        role:
+          msg.sender === "user"
+            ? "user"
+            : "assistant",
+
+        content: msg.text,
+      }))
+
+    formattedMessages.push({
+      role: "user",
+      content: userMessage,
+    })
 
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
+
         method: "POST",
 
         headers: {
+          Authorization: `Bearer ${API_KEY}`,
           "Content-Type": "application/json",
-
-          Authorization: `Bearer ${
-            import.meta.env.VITE_OPENROUTER_API_KEY
-          }`,
         },
 
         body: JSON.stringify({
-          model: "openai/gpt-3.5-turbo",
+
+          model:
+            "openai/gpt-3.5-turbo",
 
           messages: [
             {
               role: "system",
-              content:
-                "You are NeuroSphere, a futuristic AI assistant.",
+
+              content: `
+You are NeuroSphere AI,
+a calm futuristic wellness assistant.
+              `,
             },
 
-            {
-              role: "user",
-              content: message,
-            },
+            ...formattedMessages,
           ],
         }),
       }
     )
 
+    // DEBUG
+    console.log("Response status:", response.status)
+
     const data = await response.json()
 
-    return data.choices[0].message.content
+    console.log("AI DATA:", data)
+
+    return (
+      data.choices?.[0]?.message?.content ||
+      data.error?.message ||
+      "NeuroSphere could not process that."
+    )
 
   } catch (error) {
 
-    return "NeuroSphere failed to connect to AI systems."
+    console.error("AI ERROR:", error)
 
+    return "NeuroSphere connection failed."
   }
 }

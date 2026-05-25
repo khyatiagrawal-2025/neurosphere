@@ -11,9 +11,9 @@ function Hero() {
       <motion.h2
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-5xl md:text-7xl font-extrabold"
+        className="text-5xl md:text-7xl font-extrabold leading-tight"
       >
-        Explore The <span className="text-cyan-400">NeuroSphere</span>
+        Explore The <span className="text-cyan-400 drop-shadow-[0_0_25px_#22d3ee]">NeuroSphere</span>
       </motion.h2>
 
       <div className="text-gray-400 mt-6 max-w-2xl text-lg">
@@ -39,7 +39,10 @@ function Hero() {
       </p>
 
       <motion.button
-        whileHover={{ scale: 1.1 }}
+        whileHover={{
+  scale: 1.1,
+  boxShadow: "0px 0px 30px rgba(34,211,238,0.8)",
+}}
         className="mt-8 px-8 py-4 bg-cyan-400 text-black font-bold rounded-full"
       >
         Explore Now

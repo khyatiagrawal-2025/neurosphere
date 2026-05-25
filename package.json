@@ -19,9 +19,12 @@
     "react-dom": "^19.2.6",
     "react-parallax-tilt": "^1.7.328",
     "react-router-dom": "^7.15.1",
+    "react-tsparticles": "^2.12.2",
     "react-type-animation": "^3.2.0",
+    "recharts": "^3.8.1",
     "tailwindcss": "^4.3.0",
-    "three": "^0.184.0"
+    "three": "^0.184.0",
+    "tsparticles": "^4.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
