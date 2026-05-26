@@ -357,15 +357,14 @@ npm run build
 
 ---
 
-## 📞 Support & Community
+## 📞 Connect with Me
 
-Got questions or ideas? Let's connect:
+I'd love to hear your thoughts, feedback, and ideas! Let's connect:
 
-- 🐛 **Issues**: [Report bugs](https://github.com/khyatiagrawal-2025/neurosphere/issues)
-- 💡 **Discussions**: [Share ideas](https://github.com/khyatiagrawal-2025/neurosphere/discussions)
+- 🐦 **Twitter**: [@itzz_khyatiag](https://twitter.com/itzz_khyatiag)
+- 💼 **LinkedIn**: [Khyati Agrawal](https://www.linkedin.com/in/khyati-agrawal-1840ba377/)
 - 📧 **Email**: khyatiagrawal9494@gmail.com
-- 🐦 **Twitter**: [@khyatiagrawal-2025](https://twitter.com)
-- 🌐 **Website**: [Coming soon](#)
+- 🐛 **Issues & Discussions**: [GitHub Repository](https://github.com/khyatiagrawal-2025/neurosphere)
 
 ---
 
