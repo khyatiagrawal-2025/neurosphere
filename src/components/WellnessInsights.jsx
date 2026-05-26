@@ -1,5 +1,9 @@
 import { motion } from "framer-motion"
-import Tilt from "react-parallax-tilt"
+import {
+  Brain,
+  Sparkles,
+  HeartPulse,
+} from "lucide-react"
 
 function WellnessInsights() {
 
@@ -8,35 +12,84 @@ function WellnessInsights() {
       localStorage.getItem("mood-history")
     ) || []
 
-  const latestMood =
-    moodHistory[moodHistory.length - 1]
+  const moodCounts = {}
 
-  const insights = [
+  moodHistory.forEach((mood) => {
 
-    {
-      title: "Emotional State",
-      text:
-        latestMood?.label === "Sad"
-          ? "Your emotional energy seems low. Try relaxing activities."
-          : latestMood?.label === "Stressed"
-          ? "Stress levels detected. Consider taking mindful breaks."
-          : latestMood?.label === "Happy"
-          ? "Your emotional wellness looks positive today."
-          : "Your emotional systems are stable.",
-    },
+    moodCounts[mood.label] =
+      (moodCounts[mood.label] || 0) + 1
 
-    {
-      title: "AI Recommendation",
-      text:
-        "Maintain consistency in tracking emotions for deeper AI wellness analysis.",
-    },
+  })
 
-    {
-      title: "Neural Observation",
-      text:
-        "Emotional awareness increases mental clarity and productivity.",
-    },
-  ]
+  const mostFrequentMood =
+    Object.keys(moodCounts).reduce(
+      (a, b) =>
+        moodCounts[a] > moodCounts[b]
+          ? a
+          : b,
+      "Happy"
+    )
+
+  const insights = []
+
+  // AI Logic
+  if (
+    moodCounts["Stressed"] >= 3
+  ) {
+
+    insights.push(
+      "Stress levels are elevated. Consider breathing exercises or meditation."
+    )
+
+  }
+
+  if (
+    moodCounts["Happy"] >= 3
+  ) {
+
+    insights.push(
+      "Your positivity levels are improving consistently."
+    )
+
+  }
+
+  if (
+    moodCounts["Sad"] >= 2
+  ) {
+
+    insights.push(
+      "Emotional wellness seems lower recently. Take breaks and prioritize self-care."
+    )
+
+  }
+
+  if (
+    moodCounts["Calm"] >= 3
+  ) {
+
+    insights.push(
+      "Your emotional balance looks stable and peaceful."
+    )
+
+  }
+
+  if (
+    moodCounts["Excited"] >= 3
+  ) {
+
+    insights.push(
+      "Motivation and energy levels are trending upward."
+    )
+
+  }
+
+  if (insights.length === 0) {
+
+    insights.push(
+      "Track more moods to unlock advanced AI wellness insights."
+    )
+
+  }
 
   return (
 
@@ -58,100 +111,178 @@ function WellnessInsights() {
           duration: 1,
         }}
 
-        viewport={{ once: true }}
-
         className="
-          max-w-7xl
+          max-w-6xl
           mx-auto
+          bg-white/5
+          border
+          border-cyan-400/20
+          rounded-[40px]
+          backdrop-blur-xl
+          p-8
           relative
+          overflow-hidden
         "
       >
 
-        <h2 className="text-4xl md:text-5xl font-extrabold text-center">
+        {/* Glow */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-400/10 blur-3xl rounded-full"></div>
 
-          AI Wellness{" "}
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 blur-3xl rounded-full"></div>
 
-          <span className="text-cyan-400">
-            Insights
-          </span>
+        <div className="relative z-10">
 
-        </h2>
+          {/* Heading */}
+          <div className="text-center">
 
-        <p className="text-center text-gray-400 mt-4">
+            <motion.div
 
-          Futuristic emotional intelligence analysis.
+              animate={{
+                rotate: [0, 8, -8, 0],
+              }}
 
-        </p>
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+              }}
 
-        {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mt-16">
-
-          {insights.map((item, index) => (
-
-            <Tilt
-              key={index}
-
-              tiltMaxAngleX={15}
-              tiltMaxAngleY={15}
-
-              glareEnable={true}
-
-              glareMaxOpacity={0.2}
-
-              scale={1.03}
-
-              transitionSpeed={2000}
+              className="flex justify-center"
             >
 
-              <motion.div
+              <Brain
+                size={60}
+                className="text-cyan-400 drop-shadow-[0_0_20px_#22d3ee]"
+              />
 
-                whileHover={{
-                  y: -10,
-                }}
+            </motion.div>
 
-                className="
-                  relative
-                  overflow-hidden
-                  bg-white/5
-                  border
-                  border-cyan-400/20
-                  backdrop-blur-xl
-                  rounded-[35px]
-                  p-8
-                  min-h-[280px]
-                  shadow-[0_0_40px_rgba(34,211,238,0.15)]
-                "
-              >
+            <h2 className="text-4xl md:text-5xl font-extrabold mt-6">
 
-                {/* Glow */}
-                <div className="absolute -top-10 -left-10 w-40 h-40 bg-cyan-400/10 blur-3xl rounded-full"></div>
+              AI Wellness{" "}
 
-                <div className="absolute bottom-0 right-0 w-40 h-40 bg-purple-500/10 blur-3xl rounded-full"></div>
+              <span className="text-cyan-400">
 
-                {/* Hologram Line */}
-                <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-cyan-400 to-purple-500"></div>
+                Insights
 
-                <div className="relative z-10">
+              </span>
 
-                  <h3 className="text-2xl font-bold text-cyan-400">
+            </h2>
 
-                    {item.title}
+            <p className="text-gray-400 mt-4 text-lg">
 
-                  </h3>
+              NeuroSphere analyzes emotional patterns in real-time.
 
-                  <p className="text-gray-300 mt-6 leading-relaxed">
+            </p>
 
-                    {item.text}
+          </div>
 
-                  </p>
+          {/* Main Insight Card */}
+          <motion.div
 
-                </div>
+            whileHover={{
+              scale: 1.02,
+              rotateX: 4,
+              rotateY: -4,
+            }}
 
-              </motion.div>
+            className="
+              mt-14
+              bg-black/40
+              border
+              border-cyan-400/10
+              rounded-3xl
+              p-8
+              backdrop-blur-md
+            "
+          >
 
-            </Tilt>
+            <div className="flex items-center gap-4">
 
-          ))}
+              <Sparkles
+                className="text-cyan-400"
+                size={30}
+              />
+
+              <div>
+
+                <h3 className="text-2xl font-bold">
+
+                  Dominant Mood
+
+                </h3>
+
+                <p className="text-cyan-400 text-lg mt-1">
+
+                  {mostFrequentMood}
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+          {/* AI Suggestions */}
+          <div className="grid md:grid-cols-2 gap-6 mt-10">
+
+            {insights.map(
+              (insight, index) => (
+
+                <motion.div
+
+                  key={index}
+
+                  initial={{
+                    opacity: 0,
+                    y: 30,
+                  }}
+
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+
+                  transition={{
+                    delay: index * 0.2,
+                  }}
+
+                  whileHover={{
+                    scale: 1.03,
+                    rotateX: 4,
+                    rotateY: -4,
+                  }}
+
+                  className="
+                    bg-black/40
+                    border
+                    border-cyan-400/10
+                    rounded-3xl
+                    p-6
+                    backdrop-blur-md
+                  "
+                >
+
+                  <div className="flex gap-4">
+
+                    <HeartPulse
+                      className="text-cyan-400 mt-1"
+                    />
+
+                    <p className="text-gray-300 leading-relaxed">
+
+                      {insight}
+
+                    </p>
+
+                  </div>
+
+                </motion.div>
+
+              )
+            )}
+
+          </div>
 
         </div>
 

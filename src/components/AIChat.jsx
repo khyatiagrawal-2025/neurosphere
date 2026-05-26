@@ -3,11 +3,13 @@ import { motion } from "framer-motion"
 
 import { askNeuroSphere } from "../services/ai"
 import { useMood } from "../context/MoodContext"
+import TypeWriter from "./TypeWriter"
 
 import {
   Mic,
   MicOff,
   SendHorizontal,
+  Volume2,
 } from "lucide-react"
 
 function AIChat() {
@@ -28,6 +30,13 @@ function AIChat() {
             sender: "ai",
             text:
               "Welcome to NeuroSphere AI Assistant.",
+            time: new Date().toLocaleTimeString(
+              [],
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              }
+            ),
           },
         ]
   })
@@ -36,6 +45,9 @@ function AIChat() {
     useState(false)
 
   const [listening, setListening] =
+    useState(false)
+
+  const [speaking, setSpeaking] =
     useState(false)
 
   const chatEndRef = useRef(null)
@@ -63,15 +75,38 @@ function AIChat() {
   // Auto Scroll
   useEffect(() => {
 
-    if (messages.length > 1) {
+    chatEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    })
 
-      chatEndRef.current?.scrollIntoView({
-        behavior: "smooth",
-      })
+  }, [messages, loading])
+
+  // AI Voice Reply
+  const speakText = (text) => {
+
+    if (!window.speechSynthesis)
+      return
+
+    window.speechSynthesis.cancel()
+
+    const utterance =
+      new SpeechSynthesisUtterance(text)
+
+    utterance.rate = 1
+    utterance.pitch = 1
+
+    setSpeaking(true)
+
+    utterance.onend = () => {
+
+      setSpeaking(false)
 
     }
 
-  }, [messages, loading])
+    window.speechSynthesis.speak(
+      utterance
+    )
+  }
 
   // Send Message
   const handleSend = async () => {
@@ -83,6 +118,13 @@ function AIChat() {
     const userMessage = {
       sender: "user",
       text: currentInput,
+      time: new Date().toLocaleTimeString(
+        [],
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      ),
     }
 
     // Add user message
@@ -108,13 +150,23 @@ function AIChat() {
     const aiMessage = {
       sender: "ai",
       text: response,
+      time: new Date().toLocaleTimeString(
+        [],
+        {
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      ),
     }
 
-    // Add AI message
+    // Add AI response
     setMessages((prev) => [
       ...prev,
       aiMessage,
     ])
+
+    // Speak AI response
+    speakText(response)
 
     // Loading stop
     setLoading(false)
@@ -131,6 +183,8 @@ function AIChat() {
 
       return
     }
+
+    recognition.lang = "en-US"
 
     setListening(true)
 
@@ -167,6 +221,13 @@ function AIChat() {
         sender: "ai",
         text:
           "Welcome to NeuroSphere AI Assistant.",
+        time: new Date().toLocaleTimeString(
+          [],
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        ),
       },
     ]
 
@@ -267,6 +328,40 @@ function AIChat() {
 
           </p>
 
+          {/* AI Speaking Indicator */}
+          {speaking && (
+
+            <motion.div
+
+              animate={{
+                opacity: [0.5, 1, 0.5],
+              }}
+
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+              }}
+
+              className="
+                flex
+                justify-center
+                items-center
+                gap-2
+                mt-5
+                text-cyan-400
+              "
+            >
+
+              <Volume2 size={20} />
+
+              <span>
+                NeuroSphere is speaking...
+              </span>
+
+            </motion.div>
+
+          )}
+
           {/* Clear Chat */}
           <div className="flex justify-center mt-6">
 
@@ -361,8 +456,12 @@ function AIChat() {
               }`}
             >
 
-              <p className="leading-relaxed">
-                {msg.text}
+              <TypeWriter text={msg.text} />
+
+              <p className="text-xs text-gray-400 mt-3 opacity-70">
+
+                {msg.time}
+
               </p>
 
             </motion.div>
@@ -392,56 +491,35 @@ function AIChat() {
                 rounded-3xl
                 w-fit
                 flex
-                gap-2
+                gap-3
                 items-center
               "
             >
 
+              <motion.div
+
+                animate={{
+                  scale: [1, 1.4, 1],
+                  opacity: [0.5, 1, 0.5],
+                }}
+
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                }}
+
+                className="
+                  w-3
+                  h-3
+                  rounded-full
+                  bg-cyan-400
+                  shadow-[0_0_20px_#22d3ee]
+                "
+              />
+
               <span>
-                NeuroSphere is thinking
+                Neural engine processing...
               </span>
-
-              <div className="flex gap-1">
-
-                <motion.span
-                  animate={{
-                    opacity: [0.3, 1, 0.3],
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                  }}
-                >
-                  .
-                </motion.span>
-
-                <motion.span
-                  animate={{
-                    opacity: [0.3, 1, 0.3],
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                    delay: 0.2,
-                  }}
-                >
-                  .
-                </motion.span>
-
-                <motion.span
-                  animate={{
-                    opacity: [0.3, 1, 0.3],
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                    delay: 0.4,
-                  }}
-                >
-                  .
-                </motion.span>
-
-              </div>
 
             </motion.div>
 
