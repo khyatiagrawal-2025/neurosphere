@@ -9,15 +9,17 @@ function DashboardPage() {
   return (
     <>
 
-      <Dashboard />
+     <>
+  <Dashboard />
 
-      <MoodTracker />
+  <MoodTracker />
 
-      <MoodAnalytics />
+  <MoodAnalytics />
 
-      <MoodChart />
+  <MoodChart />
 
-      <WellnessInsights />
+  <WellnessInsights />
+</>
 
     </>
   )

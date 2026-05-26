@@ -19,6 +19,13 @@ import ScrollToTop from "./components/ScrollToTop"
 
 import { useMood } from "./context/MoodContext"
 
+import { loadFull } from "tsparticles"
+
+const particlesInit = async (engine) => {
+  const { loadFull } = await import("tsparticles")
+  await loadFull(engine)
+}
+
 function App() {
 
   const { selectedMood } = useMood()

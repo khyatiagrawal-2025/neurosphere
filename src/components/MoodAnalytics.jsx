@@ -1,3 +1,14 @@
+import {
+  LineChart,
+  Line,
+  XAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  AreaChart,
+  Area,
+} from "recharts"
+
 import { motion } from "framer-motion"
 
 function MoodAnalytics() {
@@ -7,52 +18,45 @@ function MoodAnalytics() {
       localStorage.getItem("mood-history")
     ) || []
 
-  const totalEntries =
-    moodHistory.length
+  const moodValues = {
+    Happy: 90,
+    Calm: 75,
+    Excited: 95,
+    Sad: 40,
+    Stressed: 25,
+  }
 
-  const moodCounts = {}
-
-  moodHistory.forEach((mood) => {
-
-    moodCounts[mood.label] =
-      (moodCounts[mood.label] || 0) + 1
-
-  })
-
-  const dominantMood =
-    Object.keys(moodCounts).reduce(
-      (a, b) =>
-        moodCounts[a] > moodCounts[b]
-          ? a
-          : b,
-      "Happy"
-    )
-
-  const latestMoods =
-    moodHistory.slice(-5).reverse()
+  const chartData = moodHistory.map(
+    (mood, index) => ({
+      day: `#${index + 1}`,
+      mood: mood.label,
+      score:
+        moodValues[mood.label] || 50,
+    })
+  )
 
   return (
 
-    <section className="px-6 md:px-10 py-20">
+    <motion.section
 
-      <motion.div
+      initial={{
+        opacity: 0,
+        y: 80,
+      }}
 
-        initial={{
-          opacity: 0,
-          y: 80,
-        }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+      }}
 
-        whileInView={{
-          opacity: 1,
-          y: 0,
-        }}
+      transition={{
+        duration: 1,
+      }}
 
-        transition={{
-          duration: 1,
-        }}
+      className="px-6 md:px-10 py-20"
+    >
 
-        viewport={{ once: true }}
-
+      <div
         className="
           max-w-6xl
           mx-auto
@@ -60,8 +64,8 @@ function MoodAnalytics() {
           border
           border-cyan-400/20
           rounded-[40px]
-          backdrop-blur-xl
           p-8
+          backdrop-blur-xl
           relative
           overflow-hidden
         "
@@ -79,145 +83,170 @@ function MoodAnalytics() {
             Mood{" "}
 
             <span className="text-cyan-400">
+
               Analytics
+
             </span>
 
           </h2>
 
           <p className="text-center text-gray-400 mt-4">
 
-            Real-time emotional insights.
+            Real-time emotional wellness visualization.
 
           </p>
 
-          {/* Stats */}
-          <div className="grid md:grid-cols-3 gap-6 mt-14">
+          {/* Charts */}
+          <div className="grid md:grid-cols-2 gap-8 mt-14">
 
-            <div className="bg-black/40 border border-cyan-400/10 rounded-3xl p-8 text-center">
+            {/* Line Chart */}
+            <motion.div
 
-              <h3 className="text-cyan-400 text-lg">
-                Total Entries
+              whileHover={{
+                scale: 1.02,
+                rotateX: 4,
+                rotateY: -4,
+              }}
+
+              className="
+                bg-black/40
+                border
+                border-cyan-400/10
+                rounded-3xl
+                p-6
+                backdrop-blur-md
+              "
+            >
+
+              <h3 className="text-cyan-400 text-xl font-semibold mb-6">
+
+                Emotional Trend
+
               </h3>
 
-              <p className="text-5xl font-bold mt-4">
-                {totalEntries}
-              </p>
+              <ResponsiveContainer
+                width="100%"
+                height={300}
+              >
 
-            </div>
+                <LineChart data={chartData}>
 
-            <div className="bg-black/40 border border-cyan-400/10 rounded-3xl p-8 text-center">
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#1e293b"
+                  />
 
-              <h3 className="text-cyan-400 text-lg">
-                Dominant Mood
+                  <XAxis
+                    dataKey="day"
+                    stroke="#94a3b8"
+                  />
+
+                  <Tooltip />
+
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    stroke="#22d3ee"
+                    strokeWidth={4}
+                  />
+
+                </LineChart>
+
+              </ResponsiveContainer>
+
+            </motion.div>
+
+            {/* Area Chart */}
+            <motion.div
+
+              whileHover={{
+                scale: 1.02,
+                rotateX: 4,
+                rotateY: -4,
+              }}
+
+              className="
+                bg-black/40
+                border
+                border-cyan-400/10
+                rounded-3xl
+                p-6
+                backdrop-blur-md
+              "
+            >
+
+              <h3 className="text-cyan-400 text-xl font-semibold mb-6">
+
+                Wellness Stability
+
               </h3>
 
-              <p className="text-4xl font-bold mt-4">
-                {dominantMood}
-              </p>
+              <ResponsiveContainer
+                width="100%"
+                height={300}
+              >
 
-            </div>
+                <AreaChart data={chartData}>
 
-            <div className="bg-black/40 border border-cyan-400/10 rounded-3xl p-8 text-center">
+                  <defs>
 
-              <h3 className="text-cyan-400 text-lg">
-                Wellness Score
-              </h3>
-
-              <p className="text-5xl font-bold mt-4">
-                {Math.min(
-                  100,
-                  totalEntries * 10
-                )}%
-              </p>
-
-            </div>
-
-          </div>
-
-          {/* Recent History */}
-          <div className="mt-14">
-
-            <h3 className="text-2xl font-bold mb-6">
-
-              Recent Mood History
-
-            </h3>
-
-            <div className="space-y-4">
-
-              {latestMoods.length > 0 ? (
-
-                latestMoods.map(
-                  (mood, index) => (
-
-                    <motion.div
-
-                      key={index}
-
-                      initial={{
-                        opacity: 0,
-                        x: -30,
-                      }}
-
-                      whileInView={{
-                        opacity: 1,
-                        x: 0,
-                      }}
-
-                      className="
-                        bg-black/40
-                        border
-                        border-cyan-400/10
-                        rounded-2xl
-                        p-5
-                        flex
-                        justify-between
-                        items-center
-                      "
+                    <linearGradient
+                      id="colorMood"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
                     >
 
-                      <div className="flex items-center gap-4">
+                      <stop
+                        offset="5%"
+                        stopColor="#22d3ee"
+                        stopOpacity={0.8}
+                      />
 
-                        <span className="text-4xl">
-                          {mood.emoji}
-                        </span>
+                      <stop
+                        offset="95%"
+                        stopColor="#22d3ee"
+                        stopOpacity={0}
+                      />
 
-                        <div>
+                    </linearGradient>
 
-                          <p className="font-semibold">
-                            {mood.label}
-                          </p>
+                  </defs>
 
-                          <p className="text-sm text-gray-400">
-                            {mood.time}
-                          </p>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#1e293b"
+                  />
 
-                        </div>
+                  <XAxis
+                    dataKey="day"
+                    stroke="#94a3b8"
+                  />
 
-                      </div>
+                  <Tooltip />
 
-                    </motion.div>
+                  <Area
+                    type="monotone"
+                    dataKey="score"
+                    stroke="#22d3ee"
+                    fillOpacity={1}
+                    fill="url(#colorMood)"
+                  />
 
-                  )
-                )
+                </AreaChart>
 
-              ) : (
+              </ResponsiveContainer>
 
-                <p className="text-gray-400">
-                  No mood history yet.
-                </p>
-
-              )}
-
-            </div>
+            </motion.div>
 
           </div>
 
         </div>
 
-      </motion.div>
+      </div>
 
-    </section>
+    </motion.section>
   )
 }
 
